@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-amber text-bg;
+  }
+}
+
+/* Fixed blueprint dot-grid behind everything. */
+.bg-grid::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(62, 50, 40, 0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+@layer components {
+  /* Buttons (shared by hero + form) */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2.5 rounded-[10px] border border-line px-[18px] py-3 font-mono text-[13px] transition;
+  }
+  .btn-primary {
+    @apply border-amber bg-amber font-semibold text-bg;
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply -translate-y-0.5;
+    box-shadow: 0 8px 24px rgba(62, 50, 40, 0.25);
+  }
+  .btn-ghost {
+    @apply bg-panel text-ink;
+  }
+  .btn-ghost:hover {
+    @apply border-amber-line text-amber;
+  }
+
+  /* Metrics grid dividers */
+  .metrics-grid {
+    @apply grid grid-cols-2 overflow-hidden rounded-2xl border border-line-soft bg-panel sm:grid-cols-4;
+  }
+  .metrics-grid > * {
+    @apply px-5 py-[22px];
+    border-right: 1px solid theme('colors.line.soft');
+  }
+  .metrics-grid > *:last-child {
+    border-right: none;
+  }
+  @media (max-width: 640px) {
+    .metrics-grid > *:nth-child(2) {
+      border-right: none;
+    }
+    .metrics-grid > *:nth-child(-n + 2) {
+      border-bottom: 1px solid theme('colors.line.soft');
+    }
+  }
+
+  /* Form fields */
+  .field-label {
+    @apply mb-[7px] block font-mono text-[11px] uppercase tracking-wide text-ink-dim;
+  }
+  .field-input {
+    @apply w-full rounded-[10px] border border-line bg-panel px-[13px] py-[11px] font-sans text-[14.5px] text-ink transition;
+  }
+  .field-input:focus {
+    @apply border-amber-line outline-none;
+    box-shadow: 0 0 0 3px rgba(62, 50, 40, 0.13);
+  }
+
+  /* Chips */
+  .skill-chip {
+    @apply rounded-[7px] border border-line-soft bg-raised px-[11px] py-[5px] text-[13px] text-ink-dim;
+  }
+  .tag-chip {
+    @apply rounded-md border border-line-soft bg-panel px-2.5 py-[5px] font-mono text-[11.5px] text-ink-dim transition-colors;
+  }
+  .tag-chip:hover {
+    @apply border-amber-line text-amber;
+  }
+
+  /* Timeline spine + travelling pulse */
+  .timeline-spine {
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #3e3228, #6d5e51 45%, #b9b2aa 100%);
+  }
+  .spine-pulse {
+    position: absolute;
+    left: -2px;
+    width: 6px;
+    height: 70px;
+    border-radius: 6px;
+    filter: blur(1px);
+    background: linear-gradient(180deg, transparent, #3e3228, transparent);
+    animation: travel 7s linear infinite;
+  }
+
+  /* Timeline node */
+  .role-dot {
+    position: absolute;
+    left: -34px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: #e4e2df;
+    border: 2px solid #3e3228;
+    box-shadow: 0 0 0 5px rgba(62, 50, 40, 0.08);
+  }
+  .role-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 9999px;
+    background: #3e3228;
+  }
+
+  /* Visually-hidden honeypot (still focusable/fillable by bots) */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+}
+
+/* Keyframes for the spine pulse. Defined here (not only in tailwind.config)
+   because .spine-pulse references `travel` via raw CSS, and Tailwind only
+   emits keyframes that are used through an `animate-*` utility class. */
+@keyframes travel {
+  0% {
+    top: -70px;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Scroll-reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .spine-pulse,
+  [class*='animate-'] {
+    animation: none !important;
+  }
+}
