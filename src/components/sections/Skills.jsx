@@ -1,13 +1,17 @@
 import Reveal from '../ui/Reveal';
 import SectionHeading from '../ui/SectionHeading';
-import { skills } from '../../data/skills';
+import { useLocale } from '../../i18n/LocaleContext';
+import { getSkills } from '../../data/skills';
 import { languages } from '../../data/languages';
 
 export default function Skills() {
+  const { locale, t } = useLocale();
+  const skills = getSkills(locale);
+
   return (
     <section id="skills" className="py-16">
       <Reveal>
-        <SectionHeading num="02" title="Technical stack" />
+        <SectionHeading num="02" title={t('skills.heading')} />
       </Reveal>
       <Reveal className="mb-[46px] mt-3.5 h-px bg-line-soft" />
 
@@ -34,9 +38,9 @@ export default function Skills() {
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Reveal className="rounded-2xl border border-line-soft bg-panel px-[22px] py-5">
           <h4 className="mb-3.5 font-mono text-[11.5px] uppercase tracking-wide text-amber">
-            Languages
+            {t('skills.languagesHeading')}
           </h4>
-          {languages.map((lang) => (
+          {languages[locale].map((lang) => (
             <div
               key={lang.name}
               className="flex items-baseline justify-between border-b border-line-soft py-[7px] text-sm last:border-b-0"
@@ -49,11 +53,10 @@ export default function Skills() {
 
         <Reveal className="rounded-2xl border border-line-soft bg-panel px-[22px] py-5">
           <h4 className="mb-3.5 font-mono text-[11.5px] uppercase tracking-wide text-amber">
-            Education &amp; certifications
+            {t('skills.educationHeading')}
           </h4>
           <p className="text-[13px] italic leading-relaxed text-ink-faint">
-            Ready to fill in — add your degree, institution and any certifications (e.g. AWS
-            Certified Developer) and they'll appear here.
+            {t('skills.educationPlaceholder')}
           </p>
         </Reveal>
       </div>

@@ -1,7 +1,9 @@
 import { Server } from 'lucide-react';
 import { iconFor } from '../../lib/icons';
+import { useLocale } from '../../i18n/LocaleContext';
 
 export default function Bullet({ bullet }) {
+  const { t } = useLocale();
   const Icon = iconFor[bullet.icon] ?? Server;
   const key = Boolean(bullet.milestone);
 
@@ -23,7 +25,7 @@ export default function Bullet({ bullet }) {
       <div>
         {key && (
           <span className="mb-[7px] inline-block rounded-[5px] border border-amber-line px-[7px] py-0.5 font-mono text-[10px] uppercase tracking-wider text-amber">
-            Key impact
+            {t('timeline.keyImpact')}
           </span>
         )}
         <div>{bullet.text}</div>

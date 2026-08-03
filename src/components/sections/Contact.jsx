@@ -1,9 +1,11 @@
 import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 import Reveal from '../ui/Reveal';
 import ContactForm from '../ui/ContactForm';
+import { useLocale } from '../../i18n/LocaleContext';
 import { profile } from '../../data/profile';
 
 export default function Contact() {
+  const { t } = useLocale();
   const tel = profile.phone.replace(/\s/g, '');
 
   return (
@@ -12,10 +14,10 @@ export default function Contact() {
         as="h3"
         className="mb-2.5 font-display text-[clamp(1.6rem,4vw,2.2rem)] font-semibold tracking-tight"
       >
-        Let's build something reliable.
+        {t('contact.heading')}
       </Reveal>
       <Reveal as="p" className="mb-[30px] max-w-[480px] text-ink-dim">
-        Available for senior and lead backend roles. Send a message below, or reach me directly.
+        {t('contact.intro')}
       </Reveal>
 
       <Reveal>

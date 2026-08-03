@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Send, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { sendContactMessage } from '../../lib/api';
 import { getRecaptchaToken } from '../../lib/recaptcha';
+import { useLocale } from '../../i18n/LocaleContext';
 
 const EMPTY = { name: '', email: '', message: '', company: '' };
 
 export default function ContactForm() {
+  const { locale, t } = useLocale();
   const [form, setForm] = useState(EMPTY);
   const [status, setStatus] = useState('idle'); // idle | sending | ok | error
   const [error, setError] = useState('');
@@ -18,24 +20,24 @@ export default function ContactForm() {
     setError('');
     try {
       const recaptchaToken = await getRecaptchaToken('contact_submit');
-      await sendContactMessage({ ...form, recaptchaToken });
+      await sendContactMessage({ ...form, recaptchaToken, locale });
       setStatus('ok');
       setForm(EMPTY);
     } catch (err) {
       setStatus('error');
-      setError(err.message || "Couldn't reach the server. Please email me directly.");
+      setError(err.message || t('form.genericError'));
     }
   };
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-3.5">
       <div>
-        <label htmlFor="cf-name" className="field-label">Name</label>
+        <label htmlFor="cf-name" className="field-label">{t('form.nameLabel')}</label>
         <input id="cf-name" value={form.name} onChange={update('name')} required className="field-input" />
       </div>
 
       <div>
-        <label htmlFor="cf-email" className="field-label">Email</label>
+        <label htmlFor="cf-email" className="field-label">{t('form.emailLabel')}</label>
         <input
           id="cf-email"
           type="email"
@@ -47,7 +49,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="cf-message" className="field-label">Message</label>
+        <label htmlFor="cf-message" className="field-label">{t('form.messageLabel')}</label>
         <textarea
           id="cf-message"
           value={form.message}
@@ -76,18 +78,18 @@ export default function ContactForm() {
       >
         {status === 'sending' ? (
           <>
-            <Loader2 size={15} className="animate-spin" /> Sending…
+            <Loader2 size={15} className="animate-spin" /> {t('form.sending')}
           </>
         ) : (
           <>
-            <Send size={15} /> Send message
+            <Send size={15} /> {t('form.send')}
           </>
         )}
       </button>
 
       {status === 'ok' && (
         <div className="mt-0.5 flex items-center gap-2 font-mono text-[13px] text-teal">
-          <CheckCircle2 size={15} /> Thanks — your message is on its way.
+          <CheckCircle2 size={15} /> {t('form.success')}
         </div>
       )}
       {status === 'error' && (
@@ -97,15 +99,15 @@ export default function ContactForm() {
       )}
 
       <p className="mt-1 text-[11px] leading-snug text-ink-faint">
-        This site is protected by reCAPTCHA and the Google{' '}
+        {t('form.recaptchaPrefix')}{' '}
         <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="underline hover:text-ink-dim">
-          Privacy Policy
+          {t('form.recaptchaPrivacy')}
         </a>{' '}
-        and{' '}
+        {t('form.recaptchaMiddle')}{' '}
         <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="underline hover:text-ink-dim">
-          Terms of Service
+          {t('form.recaptchaTerms')}
         </a>{' '}
-        apply.
+        {t('form.recaptchaSuffix')}
       </p>
     </form>
   );

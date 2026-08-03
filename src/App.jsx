@@ -1,3 +1,4 @@
+import { LocaleProvider } from './i18n/LocaleContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
@@ -7,15 +8,17 @@ import Contact from './components/sections/Contact';
 
 export default function App() {
   return (
-    <div className="bg-grid relative min-h-screen">
-      <Navbar />
-      <main className="relative z-10 mx-auto max-w-content px-6">
-        <Hero />
-        <Timeline />
-        <Skills />
-        <Contact />
-        <Footer />
-      </main>
-    </div>
+    <LocaleProvider>
+      <div className="bg-grid relative min-h-screen">
+        <Navbar />
+        <main className="relative z-10 mx-auto max-w-content px-6">
+          <Hero />
+          <Timeline />
+          <Skills />
+          <Contact />
+          <Footer />
+        </main>
+      </div>
+    </LocaleProvider>
   );
 }
