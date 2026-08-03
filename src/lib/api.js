@@ -1,11 +1,9 @@
-const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:3000';
-
 /**
- * POST the contact form to the NestJS API.
+ * POST the contact form to the /api/contact serverless function.
  * Throws an Error with a readable message on failure.
  */
 export async function sendContactMessage(payload) {
-  const res = await fetch(`${API_BASE}/api/contact`, {
+  const res = await fetch('/api/contact', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
