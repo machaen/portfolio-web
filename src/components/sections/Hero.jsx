@@ -1,12 +1,13 @@
-import { Mail, Phone } from 'lucide-react';
+import { Mail, MessageCircle } from 'lucide-react';
 import Reveal from '../ui/Reveal';
 import { useLocale } from '../../i18n/LocaleContext';
 import { profile } from '../../data/profile';
 import { metrics } from '../../data/metrics';
+import { getWhatsAppLink } from '../../lib/whatsapp';
 
 export default function Hero() {
   const { locale, t } = useLocale();
-  const tel = profile.phone.replace(/\s/g, '');
+  const whatsappHref = getWhatsAppLink(profile.phone, t('whatsapp.message'));
 
   return (
     <header className="relative pb-[72px] pt-24">
@@ -40,8 +41,8 @@ export default function Hero() {
         <a href={`mailto:${profile.email}`} className="btn btn-primary">
           <Mail size={15} /> {t('hero.getInTouch')}
         </a>
-        <a href={`tel:${tel}`} className="btn btn-ghost">
-          <Phone size={15} /> {profile.phone}
+        <a href={whatsappHref} target="_blank" rel="noreferrer" className="btn btn-ghost">
+          <MessageCircle size={15} /> WhatsApp
         </a>
       </Reveal>
 

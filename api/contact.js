@@ -32,6 +32,9 @@ const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const escapeHtml = (s) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+// Optional fields — trimmed and length-capped, no other validation.
+const clamp = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+
 /**
  * Verifies a v3 token against Google's siteverify endpoint. No-ops if
  * RECAPTCHA_SECRET_KEY isn't set, so local dev works without one — matches
@@ -78,12 +81,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed.' });
   }
 
-  const { name, email, message, company, recaptchaToken, locale } = req.body ?? {};
+  const {
+    name,
+    email,
+    phone,
+    company,
+    projectType,
+    budget,
+    timeline,
+    message,
+    website, // honeypot
+    recaptchaToken,
+    locale,
+  } = req.body ?? {};
   const msg = messagesFor(locale);
 
   // Honeypot — pretend success, send nothing. Checked before reCAPTCHA so
   // obvious bots don't cost a siteverify call.
-  if (company && String(company).trim().length > 0) {
+  if (website && String(website).trim().length > 0) {
     return res.status(200).json({ ok: true, message: msg.success });
   }
 
@@ -106,19 +121,46 @@ export default async function handler(req, res) {
   const trimmedName = name.trim();
   const trimmedEmail = email.trim();
   const trimmedMessage = message.trim();
+  const trimmedPhone = clamp(phone, 40);
+  const trimmedCompany = clamp(company, 150);
+  const trimmedProjectType = clamp(projectType, 150);
+  const trimmedBudget = clamp(budget, 100);
+  const trimmedTimeline = clamp(timeline, 100);
+
+  const row = (label, value) =>
+    `<tr><td style="padding:2px 12px 2px 0;color:#555"><strong>${label}</strong></td><td>${value || '—'}</td></tr>`;
 
   try {
     await getTransporter().sendMail({
       from: process.env.MAIL_FROM,
       to: process.env.CONTACT_TO,
       replyTo: `${trimmedName} <${trimmedEmail}>`,
-      subject: `Portfolio contact — ${trimmedName}`,
-      text: `New portfolio contact\n\nName: ${trimmedName}\nEmail: ${trimmedEmail}\n\n${trimmedMessage}`,
+      subject: `Project request — ${trimmedProjectType || 'General'} — ${trimmedName}`,
+      text: [
+        'New project request',
+        '',
+        `Name: ${trimmedName}`,
+        `Email: ${trimmedEmail}`,
+        `Phone: ${trimmedPhone || '—'}`,
+        `Company: ${trimmedCompany || '—'}`,
+        `Project type: ${trimmedProjectType || '—'}`,
+        `Budget: ${trimmedBudget || '—'}`,
+        `Timeline: ${trimmedTimeline || '—'}`,
+        '',
+        trimmedMessage,
+      ].join('\n'),
       html: `
         <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#111">
-          <h2 style="margin:0 0 12px">New portfolio contact</h2>
-          <p><strong>Name:</strong> ${escapeHtml(trimmedName)}<br/>
-             <strong>Email:</strong> <a href="mailto:${escapeHtml(trimmedEmail)}">${escapeHtml(trimmedEmail)}</a></p>
+          <h2 style="margin:0 0 12px">New project request</h2>
+          <table style="border-collapse:collapse;margin-bottom:16px">
+            ${row('Name', escapeHtml(trimmedName))}
+            ${row('Email', `<a href="mailto:${escapeHtml(trimmedEmail)}">${escapeHtml(trimmedEmail)}</a>`)}
+            ${row('Phone', escapeHtml(trimmedPhone))}
+            ${row('Company', escapeHtml(trimmedCompany))}
+            ${row('Project type', escapeHtml(trimmedProjectType))}
+            ${row('Budget', escapeHtml(trimmedBudget))}
+            ${row('Timeline', escapeHtml(trimmedTimeline))}
+          </table>
           <p style="white-space:pre-wrap;border-left:3px solid #3E3228;padding-left:12px">${escapeHtml(trimmedMessage)}</p>
         </div>`,
     });

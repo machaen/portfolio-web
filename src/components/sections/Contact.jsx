@@ -1,12 +1,14 @@
-import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { Mail, MessageCircle, MapPin, ArrowUpRight, MessageSquarePlus } from 'lucide-react';
 import Reveal from '../ui/Reveal';
-import ContactForm from '../ui/ContactForm';
 import { useLocale } from '../../i18n/LocaleContext';
+import { useRequestModal } from '../../context/RequestModalContext';
 import { profile } from '../../data/profile';
+import { getWhatsAppLink } from '../../lib/whatsapp';
 
 export default function Contact() {
   const { t } = useLocale();
-  const tel = profile.phone.replace(/\s/g, '');
+  const { openModal } = useRequestModal();
+  const whatsappHref = getWhatsAppLink(profile.phone, t('whatsapp.message'));
 
   return (
     <section id="contact" className="border-t border-line-soft py-14">
@@ -30,17 +32,24 @@ export default function Contact() {
               <Mail size={16} className="text-amber" /> {profile.email} <ArrowUpRight size={13} />
             </a>
             <a
-              href={`tel:${tel}`}
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex w-fit items-center gap-3 font-mono text-sm text-ink transition-colors hover:text-amber"
             >
-              <Phone size={16} className="text-amber" /> {profile.phone}
+              <MessageCircle size={16} className="text-amber" /> {profile.phone}
             </a>
             <span className="inline-flex w-fit items-center gap-3 font-mono text-sm text-ink">
               <MapPin size={16} className="text-amber" /> {profile.location}
             </span>
           </div>
 
-          <ContactForm />
+          <div className="rounded-2xl border border-line-soft bg-panel p-6">
+            <p className="mb-4 text-[13.5px] leading-relaxed text-ink-dim">{t('contact.ctaBody')}</p>
+            <button type="button" onClick={() => openModal(null)} className="btn btn-primary w-full">
+              <MessageSquarePlus size={15} /> {t('contact.ctaButton')}
+            </button>
+          </div>
         </div>
       </Reveal>
     </section>

@@ -2,11 +2,13 @@ import { Check } from 'lucide-react';
 import Reveal from '../ui/Reveal';
 import SectionHeading from '../ui/SectionHeading';
 import { useLocale } from '../../i18n/LocaleContext';
+import { useRequestModal } from '../../context/RequestModalContext';
 import { services } from '../../data/services';
 import { iconFor } from '../../lib/icons';
 
 export default function Services() {
   const { locale, t } = useLocale();
+  const { openModal } = useRequestModal();
 
   return (
     <section id="services" className="py-16">
@@ -53,9 +55,13 @@ export default function Services() {
                 ))}
               </ul>
 
-              <a href="#contact" className={'btn w-full ' + (tier.featured ? 'btn-primary' : 'btn-ghost')}>
+              <button
+                type="button"
+                onClick={() => openModal(tier.id)}
+                className={'btn w-full ' + (tier.featured ? 'btn-primary' : 'btn-ghost')}
+              >
                 {t('services.cta')}
-              </a>
+              </button>
             </Reveal>
           );
         })}
