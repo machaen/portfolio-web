@@ -3,6 +3,7 @@ import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
 import Timeline from './components/sections/Timeline';
 import Skills from './components/sections/Skills';
+import Services from './components/sections/Services';
 import Contact from './components/sections/Contact';
 import ParticleBackground from './components/ui/ParticleBackground';
 
@@ -15,6 +16,7 @@ export default function Site() {
         <Hero />
         <Timeline />
         <Skills />
+        <Services />
         <Contact />
         <Footer />
       </main>

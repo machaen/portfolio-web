@@ -1,4 +1,4 @@
-import { Server, ShieldCheck, GitBranch, Database, Zap, Layers, Boxes } from 'lucide-react';
+import { Server, ShieldCheck, GitBranch, Database, Zap, Layers, Boxes, Globe, LayoutGrid } from 'lucide-react';
 
 export const iconFor = {
   server: Server,
@@ -8,4 +8,6 @@ export const iconFor = {
   zap: Zap,
   layers: Layers,
   boxes: Boxes,
+  globe: Globe,
+  grid: LayoutGrid,
 };

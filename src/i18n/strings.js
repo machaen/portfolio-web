@@ -2,7 +2,7 @@
 // locale, then dot-path — read via the t() helper from LocaleContext.
 export const strings = {
   en: {
-    nav: { timeline: 'timeline', stack: 'stack', contact: 'contact' },
+    nav: { timeline: 'timeline', stack: 'stack', services: 'services', contact: 'contact' },
     hero: {
       badge: 'OPEN TO SENIOR & LEAD BACKEND ROLES',
       getInTouch: 'Get in touch',
@@ -19,6 +19,12 @@ export const strings = {
       educationHeading: 'Education & certifications',
       educationPlaceholder:
         "Ready to fill in — add your degree, institution and any certifications (e.g. AWS Certified Developer) and they'll appear here.",
+    },
+    services: {
+      heading: 'Services',
+      intro: 'From a simple website to a custom system — pick a starting point.',
+      badge: 'Most requested',
+      cta: 'Request a quote',
     },
     contact: {
       heading: "Let's build something reliable.",
@@ -43,7 +49,7 @@ export const strings = {
     },
   },
   es: {
-    nav: { timeline: 'trayectoria', stack: 'stack', contact: 'contacto' },
+    nav: { timeline: 'trayectoria', stack: 'stack', services: 'servicios', contact: 'contacto' },
     hero: {
       badge: 'DISPONIBLE PARA ROLES SENIOR Y LEAD DE BACKEND',
       getInTouch: 'Contáctame',
@@ -60,6 +66,12 @@ export const strings = {
       educationHeading: 'Educación y certificaciones',
       educationPlaceholder:
         'Listo para completar — agrega tu título, institución y cualquier certificación (p. ej. AWS Certified Developer) y aparecerán aquí.',
+    },
+    services: {
+      heading: 'Servicios',
+      intro: 'De un sitio sencillo a un sistema a medida — elige un punto de partida.',
+      badge: 'Más solicitado',
+      cta: 'Solicitar cotización',
     },
     contact: {
       heading: 'Construyamos algo confiable.',
