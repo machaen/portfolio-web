@@ -1,24 +1,15 @@
-import { LocaleProvider } from './i18n/LocaleContext';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Hero from './components/sections/Hero';
-import Timeline from './components/sections/Timeline';
-import Skills from './components/sections/Skills';
-import Contact from './components/sections/Contact';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import RootRedirect from './routes/RootRedirect';
+import LocalePage from './routes/LocalePage';
 
 export default function App() {
   return (
-    <LocaleProvider>
-      <div className="bg-grid relative min-h-screen">
-        <Navbar />
-        <main className="relative z-10 mx-auto max-w-content px-6">
-          <Hero />
-          <Timeline />
-          <Skills />
-          <Contact />
-          <Footer />
-        </main>
-      </div>
-    </LocaleProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RootRedirect />} />
+        <Route path="/:lang" element={<LocalePage />} />
+        <Route path="*" element={<RootRedirect />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
